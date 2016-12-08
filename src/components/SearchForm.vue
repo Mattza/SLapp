@@ -1,16 +1,14 @@
 <template>
   <div>
-    <form v-on:submit="search()">
-      <input v-model="model.from" placeholder="Från" />
-      <input v-model="model.to" placeholder="Till" />
-      <button>Sök</button>
+    <form v-on:submit.prevent="search()">
+      <input type="text" v-model="model.from" placeholder="Från" />
+      <input type="text" v-model="model.to" placeholder="Till" />
+      <button v-bind:disabled="searching">Sök</button>
     </form>
   </div>
 </template>
 
 <script>
-// import router from './../main.js';
-
 import searchStore from './../SearchStore';
 export default {
   name: 'searchForm',
@@ -19,19 +17,20 @@ export default {
       model: {
         from: '',
         to: ''
-      }
+      },
+      searching: false
     }
   },
   methods: {
     search () {
+      this.searching = true;
       searchStore.fetch({destId: this.model.to, originId: this.model.from})
         .then(() => {
-          console.log('navigate');
+          this.searching = false;
           this.$routz.replace('/search-result');
         })
     }
   }
-
 }
 </script>
 
@@ -41,7 +40,7 @@ export default {
     margin: 20px;
   }
   
-  input {
+  input[type="text"] {
     display: block;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -63,7 +62,7 @@ export default {
     -moz-appearance: none;
   }
   
-  input:focus {
+  input[type="text"]:focus {
     border: 1px solid #8a8a8a;
     background-color: #fefefe;
     outline: none;
@@ -90,4 +89,9 @@ export default {
     background-color: #2199e8;
     color: #fefefe;
   }
+  
+  button:disabled{
+    opacity: 0.5;
+  }
+  
 </style>
