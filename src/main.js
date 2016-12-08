@@ -10,7 +10,7 @@ const router = new VueRouter({
   routes: [
     { path: '/search', component: SearchForm },
     { path: '/search-result', component: SearchResult },
-    { path: '*', component: SearchForm }
+    { path: '/', component: SearchForm }
   ]
 })
 Vue.use(VueRouter)

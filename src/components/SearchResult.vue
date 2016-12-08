@@ -4,8 +4,13 @@
     <li v-for="res in result">
       <h3>
         <span>{{res|origin}}</span>
+        <span>-</span>
         <span>{{res|destination}}</span>
+
       </h3>
+      <h4 v-for="part in res.LegList.Leg">
+        {{part.type}} {{part.dir}}
+      </h4>
       <h5>
         <span>{{res|time}}</span>
       </h5>
@@ -35,6 +40,10 @@ export default {
     time: res => {
       return res.LegList.Leg[0].Origin.time + ' >> ' + res.LegList.Leg[res.LegList.Leg.length - 1].Destination.time + ' ' + res.dur + 'min'
     },
+    parttype: item => {
+      console.log('type', item);
+      return `${item.type} ${item.dir}`;
+    },
     fullTripStr: (legs) => {
       var ret = [legs.LegList.Leg[0].Origin.name];
       legs.LegList.Leg.forEach(item => {
@@ -42,13 +51,13 @@ export default {
           ret.push(item.Destination.name);
         }
       })
-      console.log('legs', legs.LegList);
       return ret;
     }
   },
   created () {
     if (this.result.length === 0) {
-      this.$routz.push('search-form')
+      console.log('no dataz');
+      this.$routz.push('search')
     }
   }
 }
@@ -63,5 +72,6 @@ export default {
   
   li {
     margin: 0 10px;
+    border-bottom: 1px solid black;
   }
 </style>

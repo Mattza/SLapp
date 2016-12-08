@@ -3,7 +3,7 @@
     <form v-on:submit="search()">
       <input v-model="model.from" placeholder="Från" />
       <input v-model="model.to" placeholder="Till" />
-      <button v-on:click="search()">Sök</button>
+      <button>Sök</button>
     </form>
   </div>
 </template>
@@ -25,7 +25,10 @@ export default {
   methods: {
     search () {
       searchStore.fetch({destId: this.model.to, originId: this.model.from})
-        .then(() => this.$routz.push('search-result'))
+        .then(() => {
+          console.log('navigate');
+          this.$routz.replace('/search-result');
+        })
     }
   }
 

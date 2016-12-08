@@ -26,11 +26,13 @@ app.post('/api/search', (req, res) => {
         });
         response.on('end', () => {
             const json = JSON.parse(datas).TripList.Trip;
+            if (json) {
             json.forEach(trip => {
                 if(!Array.isArray(trip.LegList.Leg)){
                     trip.LegList.Leg = [trip.LegList.Leg];
                 }
             })
+            }
             res.send(json);
         })
     })

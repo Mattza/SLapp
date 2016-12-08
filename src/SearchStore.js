@@ -7,6 +7,7 @@ const searchStore = {
       axios.post('api/search', searchObj).then(data => {
         // data.data.forEach(item => result.push(item));
         result = data.data;
+        console.log('Stored!')
         resolve(result);
       })
     })
