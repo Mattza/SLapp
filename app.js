@@ -3,8 +3,8 @@ const express = require('express');
 const app = express();
 app.use(express.static('dist'))
 app.use(require('body-parser').json());
-
-app.get('/taco',(a,b)=>b.send('tavo'))
+console.log('alive');
+app.get('/taco',(a,b) => b.send('tavo'))
 app.post('/api/search', (req, res) => {
     const searchObj = req.body;
     console.log(searchObj);
