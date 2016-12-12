@@ -1,9 +1,13 @@
 <template>
   <div id="app">
     <header>
-      <h1>SLapp</h1>
+      <h1>
+        <router-link to="/">
+          SLapp
+        </router-link>
+      </h1>
     </header>
-     <router-view></router-view>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -23,6 +27,11 @@ export default {
 <style>
   body {
     margin: 0;
+  }
+  
+  a {
+    color: inherit;
+    text-decoration: inherit;
   }
   
   #app {
