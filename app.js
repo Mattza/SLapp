@@ -1,6 +1,7 @@
 'use strict'
 const express = require('express');
 const app = express();
+app.use(require('compression')())
 app.use(express.static('dist'))
 app.use(require('body-parser').json());
 
