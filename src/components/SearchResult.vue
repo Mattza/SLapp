@@ -2,10 +2,7 @@
   <ul>
     <li v-for="res in result">
       <h3>
-        <span>
-          {{res.LegList|time}}
-          {{res.dur}} min
-          </span>
+        {{res.LegList|time}} {{res.dur}} min
       </h3>
       <h5>
         <span>{{res|origin}}</span>
@@ -19,10 +16,6 @@
           <p class="time">{{part.Origin.time}}</p>
           <span class="line">{{part.line}}</span>
         </div>
-        <!--<h3 v-for="part in res.LegList.Leg">
-        {{part.type}} {{part.dir}}
-      </h3>-->
-
     </li>
   </ul>
 </template>
@@ -39,7 +32,7 @@ export default {
   filters: {
     origin: res => res.LegList.Leg[0].Origin.name,
     destination: res => res.LegList.Leg[res.LegList.Leg.length - 1].Destination.name,
-    time: res => `${res.Leg[0].Origin.time} >> ${res.Leg[res.Leg.length - 1].Destination.time}`,
+    time: res => `${res.Leg[0].Origin.time} ⇒ ${res.Leg[res.Leg.length - 1].Destination.time}`,
     typeImg: res => `static/${res}-icon.svg`
   },
   created () {
@@ -74,8 +67,13 @@ export default {
   
   .line {
     position: absolute;
-    top: 27px;
-    left: 32px;
+    top: 33px;
+    left: 0;
+    right: 0;
+  }
+  
+  h3 {
+    margin: 5px;
   }
   
   h5,

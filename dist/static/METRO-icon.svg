@@ -2,7 +2,6 @@
  <g>
   <rect fill="#03a9f4" height="100" width="100" y="0" x="0"/>
   <ellipse ry="45" rx="45" cy="50" cx="50" stroke-width="0" stroke="#000" fill="#fff"/>
-  <rect height="5" width="30" y="30" x="25"/>
-  <rect height="45" width="6" y="30" x="37"/>
+  <text x="31" y="57" font-size="60">T</text>
 </g>
 </svg>

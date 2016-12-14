@@ -29,6 +29,10 @@ export default {
     margin: 0;
   }
   
+  h1 {
+    margin: 10px;
+  }
+  
   a {
     color: inherit;
     text-decoration: inherit;
@@ -42,7 +46,7 @@ export default {
   }
   
   header {
-    padding: 10px;
+    padding: 5px;
     background-color: #03a9f4;
     color: #fefefe;
   }

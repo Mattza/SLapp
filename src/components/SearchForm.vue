@@ -3,12 +3,12 @@
     <form v-on:submit.prevent="search()">
       <input type="text" v-model="model.from" placeholder="Från" />
       <div class="quick-wrapper">
-        <button class="btn" type="button" v-on:click="selectQuick('from',quick)"  v-for="quick in quickResult.from">{{quick}}</span>
+        <button class="btn btn-default" type="button" v-on:click="selectQuick('from',quick)"  v-for="quick in quickResult.from">{{quick}}</span>
       </div>
       
       <input type="text" v-model="model.to" placeholder="Till" />
        <div class="quick-wrapper">
-        <button class="btn" type="button" v-on:click="selectQuick('to',quick)"  v-for="quick in quickResult.to">{{quick}}</span>
+        <button class="btn btn-default" type="button" v-on:click="selectQuick('to',quick)"  v-for="quick in quickResult.to">{{quick}}</span>
       </div>
       <button class="btn btn-primary" v-bind:disabled="searching">Sök</button>
     </form>
@@ -103,6 +103,11 @@ export default {
     background-color: #2199e8;
     color: #fefefe;
   }
+  .btn-default {
+    background-color: #fefefe;
+    color: #2199e8;
+    border: 1px solid #2199e8;
+  }
   
   button:disabled {
     opacity: 0.5;
@@ -115,7 +120,6 @@ export default {
   button {
     width:30%;
     overflow: hidden;
-
   }
 
 </style>
