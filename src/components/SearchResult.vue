@@ -40,7 +40,7 @@ export default {
     origin: res => res.LegList.Leg[0].Origin.name,
     destination: res => res.LegList.Leg[res.LegList.Leg.length - 1].Destination.name,
     time: res => `${res.Leg[0].Origin.time} >> ${res.Leg[res.Leg.length - 1].Destination.time}`,
-    typeImg: res => `static/${res}.svg`
+    typeImg: res => `static/${res}-icon.svg`
   },
   created () {
     if (this.result.length === 0) {
@@ -78,7 +78,6 @@ export default {
     left: 32px;
   }
   
- 
   h5,
   p {
     margin: 0;
