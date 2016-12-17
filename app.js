@@ -32,9 +32,12 @@ app.post('/api/search', (req, res) => {
                         if (!Array.isArray(trip.LegList.Leg)) {
                             trip.LegList.Leg = [trip.LegList.Leg];
                         }
-                    })
+                    });
+                    res.send(json);
+                } else {
+                  res.status(500);
+                  res.send(JSON.parse(datas));
                 }
-                res.send(json);
             } catch (error) {
                 res.status(500);
             }
