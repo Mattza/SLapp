@@ -25,6 +25,7 @@ app.post('/api/search', (req, res) => {
         });
         response.on('end', () => {
             try {
+                console.log('fetched:', JSON.parse(datas));
                 const json = JSON.parse(datas).TripList.Trip;
                 if (json) {
                     json.forEach(trip => {
