@@ -5,6 +5,16 @@ app.use(require('compression')())
 app.use(express.static('dist'))
 app.use(require('body-parser').json());
 
+app.get('/demo.appcache',(req,res)=> {
+    var cache = `CACHE MANIFEST
+/static/js/vendor.js
+/static/js/manifest.js
+/static/js/app.js
+/static/css/app.df2588c59e82b96532cfc920dd25eb78.css`;
+    res.contentType('text/cache-manifest');
+    res.send(cache)
+})
+
 app.post('/api/search', (req, res) => {
     const searchObj = req.body;
     const searchStr = Object.keys(searchObj).reduce((acc, key) => {
