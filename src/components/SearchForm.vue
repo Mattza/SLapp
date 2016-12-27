@@ -2,10 +2,17 @@
   <div>
     <form v-on:submit.prevent="search()">
       <input type="text" v-model="model.from" placeholder="Från" />
+      <div class="quick-wrapper">
+        <button class="btn btn-default" type="button" v-on:click="selectQuick('from',quick)"  v-for="quick in quickResult.from">{{quick}}</span>
+      </div>
+      
       <input type="text" v-model="model.to" placeholder="Till" />
-      <button v-bind:disabled="searching">Sök</button>
+       <div class="quick-wrapper">
+        <button class="btn btn-default" type="button" v-on:click="selectQuick('to',quick)"  v-for="quick in quickResult.to">{{quick}}</span>
+      </div>
+      <button class="btn btn-primary" v-bind:disabled="searching">Sök</button>
     </form>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -18,10 +25,14 @@ export default {
         from: '',
         to: ''
       },
+      quickResult: searchStore.quickResult(),
       searching: false
     }
   },
   methods: {
+    selectQuick (key, val) {
+      this.model[key] = val;
+    },
     search () {
       this.searching = true;
       searchStore.fetch({destId: this.model.to, originId: this.model.from})
@@ -72,7 +83,7 @@ export default {
     transition: box-shadow 0.5s, border-color 0.25s ease-in-out;
   }
   
-  button {
+  .btn {
     display: inline-block;
     text-align: center;
     line-height: 1;
@@ -83,15 +94,32 @@ export default {
     vertical-align: middle;
     border: 1px solid transparent;
     border-radius: 0;
-    padding: 0.85em 1em;
+    padding: 0.85em 0;
     margin: 0 0 1rem 0;
     font-size: 0.9rem;
+  }
+  
+  .btn-primary {
     background-color: #2199e8;
     color: #fefefe;
   }
+  .btn-default {
+    background-color: #fefefe;
+    color: #2199e8;
+    border: 1px solid #2199e8;
+  }
   
-  button:disabled{
+  button:disabled {
     opacity: 0.5;
   }
   
+  .quick-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+  button {
+    width:30%;
+    overflow: hidden;
+  }
+
 </style>

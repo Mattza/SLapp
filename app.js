@@ -1,8 +1,19 @@
 'use strict'
 const express = require('express');
 const app = express();
+app.use(require('compression')())
 app.use(express.static('dist'))
 app.use(require('body-parser').json());
+
+app.get('/demo.appcache',(req,res)=> {
+    var cache = `CACHE MANIFEST
+/static/js/vendor.js
+/static/js/manifest.js
+/static/js/app.js
+/static/css/app.df2588c59e82b96532cfc920dd25eb78.css`;
+    res.contentType('text/cache-manifest');
+    res.send(cache)
+})
 
 app.post('/api/search', (req, res) => {
     const searchObj = req.body;
@@ -24,15 +35,19 @@ app.post('/api/search', (req, res) => {
         });
         response.on('end', () => {
             try {
+                console.log('fetched:', JSON.parse(datas));
                 const json = JSON.parse(datas).TripList.Trip;
                 if (json) {
                     json.forEach(trip => {
                         if (!Array.isArray(trip.LegList.Leg)) {
                             trip.LegList.Leg = [trip.LegList.Leg];
                         }
-                    })
+                    });
+                    res.send(json);
+                } else {
+                  res.status(500);
+                  res.send(JSON.parse(datas));
                 }
-                res.send(json);
             } catch (error) {
                 res.status(500);
             }

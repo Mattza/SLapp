@@ -1,9 +1,13 @@
 <template>
   <div id="app">
     <header>
-      <h1>SLapp</h1>
+      <h1>
+        <router-link to="/">
+          SLapp
+        </router-link>
+      </h1>
     </header>
-     <router-view></router-view>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -25,6 +29,15 @@ export default {
     margin: 0;
   }
   
+  h1 {
+    margin: 10px;
+  }
+  
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+  
   #app {
     font-family: 'Roboto', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -33,7 +46,7 @@ export default {
   }
   
   header {
-    padding: 10px;
+    padding: 5px;
     background-color: #03a9f4;
     color: #fefefe;
   }
