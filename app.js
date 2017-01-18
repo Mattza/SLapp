@@ -12,7 +12,7 @@ CACHE:
 /static/js/vendor.js
 /static/js/manifest.js
 /static/js/app.js
-/static/css/app.df2588c59e82b96532cfc920dd25eb78.css
+/static/css/app.css
 
 NETWORK:
 http://*
