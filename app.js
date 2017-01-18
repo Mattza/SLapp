@@ -22,7 +22,7 @@ https://*
 SETTINGS:
 prefer-online
 
-# hash: 213213`;
+# hash: 213213131`;
     res.contentType('text/cache-manifest');
     res.send(cache)
 })
