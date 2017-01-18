@@ -7,10 +7,22 @@ app.use(require('body-parser').json());
 
 app.get('/demo.appcache',(req,res)=> {
     var cache = `CACHE MANIFEST
+
+CACHE:
 /static/js/vendor.js
 /static/js/manifest.js
 /static/js/app.js
-/static/css/app.df2588c59e82b96532cfc920dd25eb78.css`;
+/static/css/app.df2588c59e82b96532cfc920dd25eb78.css
+
+NETWORK:
+http://*
+https://*
+*
+
+SETTINGS:
+prefer-online
+
+# hash: 213213`;
     res.contentType('text/cache-manifest');
     res.send(cache)
 })
