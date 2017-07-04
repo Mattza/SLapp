@@ -5,7 +5,7 @@ app.use(require('compression')({ level: 9 }))
 app.use(express.static('dist'))
 app.use(require('body-parser').json());
 
-app.get('/demo.appcache',(req,res)=> {
+app.get('/demo.appcache', (req, res) => {
     var cache = `CACHE MANIFEST
 
 CACHE:
@@ -36,11 +36,22 @@ app.post('/api/search', (req, res) => {
     const key = '6a517447db2c4a72adc256399cef82ad'
     const host = `api.sl.se`
 
+
     const path = `/api2/TravelplannerV2/trip.json?key=${key}${searchStr}`
-    console.log(path)
-    require('http').get({
-        host, path
-    }, response => {
+    const optionU = host + path;
+    console.log(path);
+    let pmMode = process.argv.some((arg) => arg === '--pm')
+    
+    let option = pmMode ? {
+        host: "proxyw.ppm.nu",
+        port: 8080,
+        path: optionU,
+        headers: {
+            host
+        }
+    } : optionU;
+console.log('pmMode',pmMode,option);
+    require('http').get(option, response => {
         let datas = ''
         response.on('data', data => {
             datas += data.toString();
@@ -57,8 +68,8 @@ app.post('/api/search', (req, res) => {
                     });
                     res.send(json);
                 } else {
-                  res.status(500);
-                  res.send(JSON.parse(datas));
+                    res.status(500);
+                    res.send(JSON.parse(datas));
                 }
             } catch (error) {
                 res.status(500);
