@@ -24,7 +24,7 @@ const searchStore = {
     return new Promise((resolve, reject) => {
       axios.post('api/search', searchObj).then(data => {
         result = data.data;
-        resolve(result);
+        resolve(result.map(i => Object.assign(i, { detailed: false })));
       })
     })
   },

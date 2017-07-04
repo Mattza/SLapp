@@ -1,20 +1,26 @@
 <template>
   <ul>
-    <li v-for="res in result">
-      <h3>
-        {{res.LegList|time}} {{res.dur}} min
-      </h3>
-      <h5>
-        <span>{{res|origin}}</span>
-        <span>-</span>
-        <span>{{res|destination}}</span>
-      </h5>
-      <div class="legList">
-        <div v-for="part in res.LegList.Leg" v-if="part.type!=='WALK'" v-bind:alt="part.name">
-
-          <img v-bind:src="part.type | typeImg" width="50" />
-          <p class="time">{{part.Origin.time}}</p>
-          <span class="line">{{part.line}}</span>
+    <li v-for="res in result" v-on:click="res.detailed=!res.detailed">
+      <div class="header">
+        <h3>
+          {{res.LegList|time}} {{res.dur}} min
+        </h3>
+        <h5>
+          <span>{{res|origin}}</span>
+          <span>-</span>
+          <span>{{res|destination}}</span>
+        </h5>
+        <button class="expander">+</button>
+      </div>
+      <div class="legList" v-show="res.detailed">
+        <template v-for="part in res.LegList.Leg" v-if="part.type!=='WALK'">
+          <div v-bind:alt="part.name">
+            <img v-bind:src="part.type | typeImg" width="50"></img>
+            <p class="time">{{part.Origin.time}}</p>
+            <span class="line">{{part.line}}</span>
+          </div>
+          <p class="middle-station" v-if="part !== res.LegList.Leg[res.LegList.Leg.length-1]">{{part.Destination.name}}</p>
+        </template>
         </div>
     </li>
   </ul>
@@ -48,16 +54,19 @@ export default {
   ul {
     list-style-type: none;
     padding: 0;
+    margin: 0;
   }
   
   li {
     margin: 0 10px;
+    padding: 10px 0;
     border-bottom: 1px solid black;
   }
   
   .legList {
     display: flex;
     justify-content: center;
+    margin-top: 1em;
   }
   
   .legList > * {
@@ -79,5 +88,20 @@ export default {
   h5,
   p {
     margin: 0;
+  }
+  .header{
+    position: relative;
+  }
+  .expander{
+    position: absolute;
+    right:0;
+    top:0;
+    bottom:0;
+    border-radius: 50%;
+    height: 2rem;
+    width: 2rem;
+    font-size: 1.5rem;
+    background-color: #03a9f4;
+    border:0;
   }
 </style>
