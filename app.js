@@ -34,7 +34,7 @@ app.post('/api/search', (req, res) => {
         return `${acc}&${key}=${searchObj[key].replace(/ /g, '')}`;
     }, '')
     const key = '6a517447db2c4a72adc256399cef82ad'
-    const host = `api.sl.se`
+    const host = `https://api.sl.se`
 
 
     const path = `/api2/TravelplannerV2/trip.json?key=${key}${searchStr}`
