@@ -19,7 +19,7 @@
 import searchStore from './../SearchStore';
 export default {
   name: 'searchForm',
-  data () {
+  data() {
     return {
       model: {
         from: '',
@@ -30,10 +30,13 @@ export default {
     }
   },
   methods: {
-    selectQuick (key, val) {
+    selectQuick(key, val) {
       this.model[key] = val;
+      if (this.model.from && this.model.to) {
+        this.search()
+      }
     },
-    search () {
+    search() {
       this.searching = true;
       searchStore.fetch({ destId: this.model.to, originId: this.model.from })
         .then(() => {
