@@ -32,7 +32,7 @@ export default {
   name: 'searchResult',
   data () {
     return {
-      result: SearchStore.get()
+      result: SearchStore.getResult()
     }
   },
   filters: {

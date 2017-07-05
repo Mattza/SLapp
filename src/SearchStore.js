@@ -10,7 +10,7 @@ if (!quickResult) {
     to: []
   }
 }
-function handleQuickResult (searchObj) {
+function handleQuickResult(searchObj) {
   quickResult.from.unshift(searchObj.originId);
   quickResult.from.length = quickResult.from.length > 3 ? 3 : quickResult.from.length;
   quickResult.to.unshift(searchObj.destId);
@@ -28,7 +28,14 @@ const searchStore = {
       })
     })
   },
-  get: () => result,
+  typeahead: str => {
+    return new Promise((resolve, reject) => {
+      axios.post('api/typeahead', { 'searchstring': str }).then(data => {
+        resolve(data.data);
+      })
+    })
+  },
+  getResult: () => result,
   quickResult: () => quickResult
 }
 export default searchStore

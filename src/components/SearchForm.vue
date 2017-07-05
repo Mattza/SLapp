@@ -1,12 +1,13 @@
 <template>
   <div>
     <form v-on:submit.prevent="search()">
-      <input type="text" v-model="model.from" placeholder="Från" />
+      <typeahead str-key="Name" :model="model.from" :search-method="changed"></typeahead>
+      <input type="text" v-model="model.from" placeholder="Från"></input>
       <div class="quick-wrapper">
         <button class="btn btn-default" type="button" v-on:click="selectQuick('from',quick)" v-for="quick in quickResult.from">{{quick}}</button>
       </div>
   
-      <input type="text" v-model="model.to" placeholder="Till" />
+      <input type="text" v-model="model.to" placeholder="Till"></input>
       <div class="quick-wrapper">
         <button class="btn btn-default" type="button" v-on:click="selectQuick('to',quick)" v-for="quick in quickResult.to">{{quick}}</button>
       </div>
@@ -17,9 +18,14 @@
 
 <script>
 import searchStore from './../SearchStore';
+import Typeahead from './Typeahead'
+
 export default {
   name: 'searchForm',
-  data () {
+  components: {
+    Typeahead
+  },
+  data() {
     return {
       model: {
         from: '',
@@ -27,19 +33,24 @@ export default {
       },
       quickResult: searchStore.quickResult(),
       searching: false
+
     }
   },
+
   methods: {
-    selectQuick (key, val) {
+    selectQuick(key, val) {
       this.model[key] = val;
     },
-    search () {
+    search() {
       this.searching = true;
       searchStore.fetch({ destId: this.model.to, originId: this.model.from })
         .then(() => {
           this.searching = false;
           this.$routz.replace('/search-result');
         })
+    },
+    changed(str) {
+      return searchStore.typeahead(str);
     }
   }
 }
