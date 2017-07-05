@@ -1,0 +1,17 @@
+CACHE MANIFEST
+
+CACHE:
+/static/js/vendor.js
+/static/js/manifest.js
+/static/js/app.js
+/static/css/app.css
+
+NETWORK:
+http://*
+https://*
+*
+
+SETTINGS:
+prefer-online
+
+# hash: 213213131

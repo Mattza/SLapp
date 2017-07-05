@@ -1,81 +1,58 @@
 'use strict'
 const express = require('express');
+const fetch = require('./fetch');
 const app = express();
+let querystringStringify = require('querystring').stringify
+
 app.use(require('compression')({ level: 9 }))
 app.use(express.static('dist'))
 app.use(require('body-parser').json());
 
 app.get('/demo.appcache', (req, res) => {
-    var cache = `CACHE MANIFEST
-
-CACHE:
-/static/js/vendor.js
-/static/js/manifest.js
-/static/js/app.js
-/static/css/app.css
-
-NETWORK:
-http://*
-https://*
-*
-
-SETTINGS:
-prefer-online
-
-# hash: 213213131`;
-    res.contentType('text/cache-manifest');
-    res.send(cache)
+    require('fs').readFile('appcache', 'utf8', (err, data) => {
+        if (err) {
+            res.status(500);
+            res.send(err);
+        } else {
+            res.contentType('text/cache-manifest');
+            res.send(data)
+        }
+    });
 })
+
+app.post('/api/typeahead', (req, res) => {
+    const searchStr = querystringStringify(req.body);
+    const key = '2a6b74a2e8f34ae895a06efe53668862'
+    const url = `http://api.sl.se/api2/typeahead.json?key=${key}&${searchStr}`
+    fetchNSend(url, res,json => json.ResponseData);
+});
 
 app.post('/api/search', (req, res) => {
-    const searchObj = req.body;
-    const searchStr = Object.keys(searchObj).reduce((acc, key) => {
-        console.log(acc);
-        return `${acc}&${key}=${searchObj[key].replace(/ /g, '')}`;
-    }, '')
+    const searchStr = querystringStringify(req.body);
     const key = '6a517447db2c4a72adc256399cef82ad'
-    const host = `https://api.sl.se`
-
-
-    const path = `/api2/TravelplannerV2/trip.json?key=${key}${searchStr}`
-    const optionU = host + path;
-    console.log(path);
-    let pmMode = process.argv.some((arg) => arg === '--pm')
-    
-    let option = pmMode ? {
-        host: "proxyw.ppm.nu",
-        port: 8080,
-        path: optionU,
-        headers: {
-            host
-        }
-    } : optionU;
-console.log('pmMode',pmMode,option);
-    require('http').get(option, response => {
-        let datas = ''
-        response.on('data', data => {
-            datas += data.toString();
-        });
-        response.on('end', () => {
-            try {
-                console.log('fetched:', JSON.parse(datas));
-                const json = JSON.parse(datas).TripList.Trip;
-                if (json) {
-                    json.forEach(trip => {
-                        if (!Array.isArray(trip.LegList.Leg)) {
-                            trip.LegList.Leg = [trip.LegList.Leg];
-                        }
-                    });
-                    res.send(json);
-                } else {
-                    res.status(500);
-                    res.send(JSON.parse(datas));
-                }
-            } catch (error) {
-                res.status(500);
+    const url = `http://api.sl.se/api2/TravelplannerV2/trip.json?key=${key}&${searchStr}`
+    fetchNSend(url, res, json => {
+        let mappedJson = json.TripList.Trip
+        mappedJson.forEach(trip => {
+            if (!Array.isArray(trip.LegList.Leg)) {
+                trip.LegList.Leg = [trip.LegList.Leg];
             }
+        });
+        return mappedJson;
+    });
 
-        })
-    })
 })
 app.listen(process.env.PORT || 8081);
+
+let fetchNSend = (url, res, mapper) => {
+    fetch.getJSON(url).then(
+        json => {
+            let mappedJson = mapper ? mapper(json) : json;
+            res.send(mappedJson)
+        },
+        error => {
+            res.status(500);
+            res.send(error);
+        }
+    )
+}
