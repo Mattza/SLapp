@@ -1,15 +1,29 @@
 <template>
   <div>
     <form v-on:submit.prevent="search()">
-      <typeahead str-key="Name" :model="model.from" :search-method="changed"></typeahead>
-      <input type="text" v-model="model.from" placeholder="Från"></input>
-      <div class="quick-wrapper">
-        <button class="btn btn-default" type="button" v-on:click="selectQuick('from',quick)" v-for="quick in quickResult.from">{{quick}}</button>
-      </div>
+      <!--<typeahead @changed="onChange" str-key="Name" keyz="from" :model="model.from" :search-method="changed"></typeahead>-->
+      <div class="field-wrapper">
+        <input type="text" v-model="model.from.Name" placeholder="Från" @input="changed('from')" @keydown.esc="reset" @blur="reset('from')"></input>
+        <ul v-show="model.fromTypeaheads.length" class="typeahead-result">
+          <li v-for="item in model.fromTypeaheads" @mousedown="selectTypeahead('from',item)">
+            {{item.Name}}
+          </li>
+        </ul>
   
-      <input type="text" v-model="model.to" placeholder="Till"></input>
-      <div class="quick-wrapper">
-        <button class="btn btn-default" type="button" v-on:click="selectQuick('to',quick)" v-for="quick in quickResult.to">{{quick}}</button>
+        <div class="quick-wrapper">
+          <button class="btn btn-default" type="button" v-on:click="selectQuick('from',quick)" v-for="quick in quickResult.from">{{quick.Name}}</button>
+        </div>
+      </div>
+      <div class="field-wrapper">
+        <input type="text" v-model="model.to.Name" placeholder="Till" @input="changed('to')" @keydown.esc="reset('to')" @blur="reset('to')"></input>
+        <ul v-show="model.toTypeaheads.length" class="typeahead-result">
+          <li v-for="item in model.toTypeaheads" @mousedown="selectTypeahead('to',item)">
+            {{item.Name}}
+          </li>
+        </ul>
+        <div class="quick-wrapper">
+          <button class="btn btn-default" type="button" v-on:click="selectQuick('to',quick)" v-for="quick in quickResult.to">{{quick.Name}}</button>
+        </div>
       </div>
       <button class="btn btn-primary" v-bind:disabled="searching">Sök</button>
     </form>
@@ -18,39 +32,59 @@
 
 <script>
 import searchStore from './../SearchStore';
-import Typeahead from './Typeahead'
 
 export default {
   name: 'searchForm',
-  components: {
-    Typeahead
-  },
   data() {
     return {
       model: {
-        from: '',
-        to: ''
+        from: { Name: '' },
+        fromTypeaheads: [],
+        to: { Name: '' },
+        toTypeaheads: []
       },
       quickResult: searchStore.quickResult(),
       searching: false
 
     }
   },
-
+  computed: {
+    modelName: model => {
+      console.log(model);
+      return model;
+    }
+  },
   methods: {
-    selectQuick(key, val) {
-      this.model[key] = val;
+    reset(key) {
+      console.log('reset', key);
+      this.model[key + 'Typeaheads'].splice(0, this.model[key + 'Typeaheads'].length);
     },
+    selectQuick(key, val) {
+      this.model[key] = { Name: val };
+    },
+    selectTypeahead(key, item) {
+      console.log('selectTypeahead', key, item);
+      this.model[key] = item;
+    },
+
     search() {
       this.searching = true;
-      searchStore.fetch({ destId: this.model.to, originId: this.model.from })
+      searchStore.fetch(this.model.to, this.model.from)
         .then(() => {
           this.searching = false;
           this.$routz.replace('/search-result');
         })
     },
-    changed(str) {
+    stationSearch(str) {
       return searchStore.typeahead(str);
+    },
+    changed(key) {
+      this.model[key] = { Name: this.model[key].Name };
+      if (this.model[key].Name.length > 2) {
+        this.stationSearch(this.model[key].Name).then(data => {
+          this.model[key + 'Typeaheads'] = data;
+        });
+      }
     }
   }
 }
@@ -133,5 +167,33 @@ button:disabled {
 button {
   width: 30%;
   overflow: hidden;
+}
+
+.field-wrapper {
+  position: relative;
+}
+
+.typeahead-result {
+  position: absolute;
+  padding: 0;
+  top: 2rem;
+  max-width: 20rem;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #fff;
+  list-style: none;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .25);
+  z-index: 1000;
+  max-height: 20rem;
+  overflow: auto
+}
+
+.typeahead-result li {
+  padding: 1em;
+  font-size: 1rem;
+  border-bottom: 1px solid #ccc;
 }
 </style>

@@ -10,19 +10,20 @@ if (!quickResult) {
     to: []
   }
 }
-function handleQuickResult(searchObj) {
-  quickResult.from.unshift(searchObj.originId);
+function handleQuickResult(fromObj, toObj) {
+  quickResult.from.unshift(fromObj);
   quickResult.from.length = quickResult.from.length > 3 ? 3 : quickResult.from.length;
-  quickResult.to.unshift(searchObj.destId);
+  quickResult.to.unshift(toObj);
   quickResult.to.length = quickResult.to.length > 3 ? 3 : quickResult.to.length;
-  console.log(quickResult, searchObj);
 }
+const getSearchIdFromObj = obj => obj.SiteId || obj.Name;
+
 const searchStore = {
-  fetch: searchObj => {
-    handleQuickResult(searchObj);
+  fetch: (fromObj, toObj) => {
+    handleQuickResult(fromObj, toObj);
     localStorage.setItem(quickResultKey, JSON.stringify(quickResult));
     return new Promise((resolve, reject) => {
-      axios.post('api/search', searchObj).then(data => {
+      axios.post('api/search', { originId: getSearchIdFromObj(fromObj), destId: getSearchIdFromObj(toObj) }).then(data => {
         result = data.data;
         resolve(result.map(i => Object.assign(i, { detailed: false })));
       })

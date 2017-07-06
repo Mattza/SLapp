@@ -24,7 +24,7 @@ app.post('/api/typeahead', (req, res) => {
     const searchStr = querystringStringify(req.body);
     const key = '2a6b74a2e8f34ae895a06efe53668862'
     const url = `http://api.sl.se/api2/typeahead.json?key=${key}&${searchStr}`
-    fetchNSend(url, res,json => json.ResponseData);
+    fetchNSend(url, res, json => json.ResponseData);
 });
 
 app.post('/api/search', (req, res) => {
