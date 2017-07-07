@@ -1,11 +1,11 @@
 <template>
   <div>
     <form v-on:submit.prevent="search()">
-      <!--<typeahead @changed="onChange" str-key="Name" keyz="from" :model="model.from" :search-method="changed"></typeahead>-->
       <div class="field-wrapper">
-        <input type="text" v-model="model.from.Name" placeholder="Från" @input="changed('from')" @keydown.esc="reset" @blur="reset('from')"></input>
-        <ul v-show="model.fromTypeaheads.length" class="typeahead-result">
-          <li v-for="item in model.fromTypeaheads" @mousedown="selectTypeahead('from',item)">
+        <input type="text" v-model="model.from.Name" placeholder="Från" @input="changed('from')" @keydown.esc="reset('from')" @blur="reset('from')" @keydown.down="setActive('from',1)" @keydown.enter.prevent="selectTypeahead('from',model.fromTypeaheadsActiveItem)" @keydown.up="setActive('from',-1)"></input>
+        <ul v-show="model.fromTypeaheads.length || model.fromTypeaheadsSearching" class="typeahead-result">
+          <li v-if="model.fromTypeaheadsSearching">Söker</li>
+          <li v-for="item in model.fromTypeaheads" class="typeahead-result-item" @mousedown="selectTypeahead('from',item)" @mouseover="setActive('from',0,item)" :class="{'typeahead-result-item--active': item === model.fromTypeaheadsActiveItem}">
             {{item.Name}}
           </li>
         </ul>
@@ -15,9 +15,10 @@
         </div>
       </div>
       <div class="field-wrapper">
-        <input type="text" v-model="model.to.Name" placeholder="Till" @input="changed('to')" @keydown.esc="reset('to')" @blur="reset('to')"></input>
-        <ul v-show="model.toTypeaheads.length" class="typeahead-result">
-          <li v-for="item in model.toTypeaheads" @mousedown="selectTypeahead('to',item)">
+        <input type="text" v-model="model.to.Name" placeholder="Till" @input="changed('to')" @keydown.esc="reset('to')" @blur="reset('to')" @keydown.down="setActive('to',1)" @keydown.enter.prevent="selectTypeahead('to',model.toTypeaheadsActiveItem)" @keydown.up="setActive('to',-1)"></input>
+        <ul v-show="model.toTypeaheads.length || model.toTypeaheadsSearching" class="typeahead-result">
+          <li v-if="model.toTypeaheadsSearching">Söker</li>
+          <li v-for="item in model.toTypeaheads" class="typeahead-result-item" @mousedown="selectTypeahead('to',item)" @mouseover="setActive('to',0,item)" :class="{'typeahead-result-item--active': item === model.toTypeaheadsActiveItem}">
             {{item.Name}}
           </li>
         </ul>
@@ -26,6 +27,8 @@
         </div>
       </div>
       <button class="btn btn-primary" v-bind:disabled="searching">Sök</button>
+      <p v-if="searching">Söker</p>
+      <p v-if="error">{{error}}</p>
     </form>
   </div>
 </template>
@@ -40,18 +43,16 @@ export default {
       model: {
         from: { Name: '' },
         fromTypeaheads: [],
+        fromTypeaheadsActiveItem: undefined,
+        fromTypeaheadsSearching: false,
         to: { Name: '' },
-        toTypeaheads: []
+        toTypeaheads: [],
+        toTypeaheadsActiveItem: undefined,
+        toTypeaheadsSearching: false
       },
       quickResult: searchStore.quickResult(),
-      searching: false
-
-    }
-  },
-  computed: {
-    modelName: model => {
-      console.log(model);
-      return model;
+      searching: false,
+      error: ''
     }
   },
   methods: {
@@ -59,20 +60,36 @@ export default {
       console.log('reset', key);
       this.model[key + 'Typeaheads'].splice(0, this.model[key + 'Typeaheads'].length);
     },
-    selectQuick(key, val) {
-      this.model[key] = { Name: val };
+    selectQuick(key, item) {
+      this.model[key] = item;
     },
     selectTypeahead(key, item) {
       console.log('selectTypeahead', key, item);
       this.model[key] = item;
     },
-
+    setActive(key, direction, item) {
+      console.log('setActive', key, direction, item)
+      if (item) {
+        this.model[key + 'TypeaheadsActiveItem'] = item;
+      }
+      if (direction) {
+        if (!this.model[key + 'TypeaheadsActiveItem']) {
+          this.model[key + 'TypeaheadsActiveItem'] = this.model[key + 'Typeaheads'][0];
+        }
+        let index = this.model[key + 'Typeaheads'].indexOf(this.model[key + 'TypeaheadsActiveItem']);
+        this.model[key + 'TypeaheadsActiveItem'] = this.model[key + 'Typeaheads'][index + direction];
+      }
+      console.log('active', this.model[key + 'TypeaheadsActiveItem'].Name)
+    },
     search() {
       this.searching = true;
       searchStore.fetch(this.model.to, this.model.from)
         .then(() => {
           this.searching = false;
           this.$routz.replace('/search-result');
+        },
+        error => {
+          this.error = error;
         })
     },
     stationSearch(str) {
@@ -81,8 +98,14 @@ export default {
     changed(key) {
       this.model[key] = { Name: this.model[key].Name };
       if (this.model[key].Name.length > 2) {
+        this.model[key + 'TypeaheadsSearching'] = true;
         this.stationSearch(this.model[key].Name).then(data => {
           this.model[key + 'Typeaheads'] = data;
+          this.model[key + 'TypeaheadsActiveItem'] = undefined;
+          this.model[key + 'TypeaheadsSearching'] = false;
+        }, error => {
+          this.model[key + 'TypeaheadsSearching'] = false;
+          this.error = error;
         });
       }
     }
@@ -191,9 +214,13 @@ button {
   overflow: auto
 }
 
-.typeahead-result li {
+.typeahead-result-item {
   padding: 1em;
   font-size: 1rem;
   border-bottom: 1px solid #ccc;
+}
+
+.typeahead-result-item--active {
+  background-color: #ccc;
 }
 </style>
