@@ -29,8 +29,8 @@ app.post('/api/typeahead', (req, res) => {
 
 app.post('/api/search', (req, res) => {
     if (!req.body.time) {
-        let [hour, minute] = new Date().toISOString().split('T')[1].split(':');        
-        req.body.time = `${hour}:${minute}`;
+        let [hour, minute] = new Date().toISOString().split('T')[1].split(':');
+        req.body.time = `${hour + 2}:${minute}`;
     }
     const searchStr = querystringStringify(req.body);
     const key = '6a517447db2c4a72adc256399cef82ad'
