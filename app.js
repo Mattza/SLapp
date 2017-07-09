@@ -40,7 +40,7 @@ app.post('/api/search', (req, res) => {
         req.body.time = `${parseInt(hour, 10) + 2}:${minute}`;
     }
     fetchNSend(`http://api.sl.se/api2/TravelplannerV2/trip.json?key=${keys.TravelplannerV2}&${obj2queryStr(req.body)}`, res,
-        json => json.TripList.Trip.map(trip => Array.isArray(trip.LegList.Leg)[trip.LegList.Leg] : trip.LegList.Leg);
+        json => json.TripList.Trip.map(trip => Array.isArray(trip.LegList.Leg) ? [trip.LegList.Leg] : trip.LegList.Leg);
 });
 app.listen(process.env.PORT || 8081);
 
