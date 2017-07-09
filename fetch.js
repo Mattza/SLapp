@@ -10,7 +10,6 @@ module.exports = {
         host
       }
     } : url;
-    console.log('option', option);
     return new Promise((res, rej) => {
       require('http').get(option, response => {
         let datas = ''
@@ -20,11 +19,7 @@ module.exports = {
         response.on('end', () => {
           try {
             const json = JSON.parse(datas);
-            if (json) {
-              res(json);
-            } else {
-              rej(datas);
-            }
+            json ? res(json) : rej(datas);
           } catch (error) {
             rej(error);
           }

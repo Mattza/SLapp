@@ -24,10 +24,14 @@ app.post('/api/typeahead', (req, res) => {
     const searchStr = querystringStringify(req.body);
     const key = '2a6b74a2e8f34ae895a06efe53668862'
     const url = `http://api.sl.se/api2/typeahead.json?key=${key}&${searchStr}`
-    fetchNSend(url, res,json => json.ResponseData);
+    fetchNSend(url, res, json => json.ResponseData);
 });
 
 app.post('/api/search', (req, res) => {
+    if (!req.body.time) {
+        // req.body.time = 
+        console.log('tome',new Date().getHours,new Date().toISOString());
+    }
     const searchStr = querystringStringify(req.body);
     const key = '6a517447db2c4a72adc256399cef82ad'
     const url = `http://api.sl.se/api2/TravelplannerV2/trip.json?key=${key}&${searchStr}`
