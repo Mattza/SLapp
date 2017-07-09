@@ -1,18 +1,13 @@
 module.exports = {
-  getJSON: url => {
-    let pmMode = process.argv.some((arg) => arg === '--pm');
-    let host = url.split('/').slice(0, 3).join('/');
-    let option = pmMode ? {
+  getJSON: url => new Promise((res, rej) => {
+    require('http').get(process.argv.some(arg => arg === '--pm') ? {
       host: "proxyw.ppm.nu",
       port: 8080,
       path: url,
-      headers: {
-        host
-      }
-    } : url;
-    return new Promise((res, rej) => {
-      require('http').get(option, response => {
-        let datas = ''
+      headers: { host: url.split('/').slice(0, 3).join('/') }
+    } : url,
+      response => {
+        let datas = '';
         response.on('data', data => {
           datas += data.toString();
         });
@@ -25,6 +20,5 @@ module.exports = {
           }
         })
       })
-    })
-  }
+  })
 }
