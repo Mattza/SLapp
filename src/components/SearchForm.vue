@@ -76,14 +76,14 @@ export default {
         if (!this.model[key + 'TypeaheadsActiveItem']) {
           this.model[key + 'TypeaheadsActiveItem'] = this.model[key + 'Typeaheads'][0];
         }
+        
         let index = this.model[key + 'Typeaheads'].indexOf(this.model[key + 'TypeaheadsActiveItem']);
         this.model[key + 'TypeaheadsActiveItem'] = this.model[key + 'Typeaheads'][index + direction];
       }
-      console.log('active', this.model[key + 'TypeaheadsActiveItem'].Name)
     },
     search() {
       this.searching = true;
-      searchStore.fetch(this.model.to, this.model.from)
+      searchStore.fetch(this.model.from, this.model.to)
         .then(() => {
           this.searching = false;
           this.$routz.replace('/search-result');
@@ -101,7 +101,7 @@ export default {
         this.model[key + 'TypeaheadsSearching'] = true;
         this.stationSearch(this.model[key].Name).then(data => {
           this.model[key + 'Typeaheads'] = data;
-          this.model[key + 'TypeaheadsActiveItem'] = undefined;
+          this.model[key + 'TypeaheadsActiveItem'] = this.model[key + 'Typeaheads'][0];
           this.model[key + 'TypeaheadsSearching'] = false;
         }, error => {
           this.model[key + 'TypeaheadsSearching'] = false;
