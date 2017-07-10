@@ -57,18 +57,18 @@ export default {
   },
   methods: {
     reset(key) {
-      console.log('reset', key);
       this.model[key + 'Typeaheads'].splice(0, this.model[key + 'Typeaheads'].length);
     },
     selectQuick(key, item) {
       this.model[key] = item;
+      if (this.model.from.Name && this.model.to.Name) {
+        this.search();
+      }
     },
     selectTypeahead(key, item) {
-      console.log('selectTypeahead', key, item);
       this.model[key] = item;
     },
     setActive(key, direction, item) {
-      console.log('setActive', key, direction, item)
       if (item) {
         this.model[key + 'TypeaheadsActiveItem'] = item;
       }
@@ -76,7 +76,7 @@ export default {
         if (!this.model[key + 'TypeaheadsActiveItem']) {
           this.model[key + 'TypeaheadsActiveItem'] = this.model[key + 'Typeaheads'][0];
         }
-        
+
         let index = this.model[key + 'Typeaheads'].indexOf(this.model[key + 'TypeaheadsActiveItem']);
         this.model[key + 'TypeaheadsActiveItem'] = this.model[key + 'Typeaheads'][index + direction];
       }
