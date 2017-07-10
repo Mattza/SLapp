@@ -56,6 +56,7 @@ export default {
     }
   },
   methods: {
+<<<<<<< HEAD
     reset(key) {
       console.log('reset', key);
       this.model[key + 'Typeaheads'].splice(0, this.model[key + 'Typeaheads'].length);
@@ -81,6 +82,14 @@ export default {
         this.model[key + 'TypeaheadsActiveItem'] = this.model[key + 'Typeaheads'][index + direction];
       }
     },
+=======
+    selectQuick(key, val) {
+      this.model[key] = val;
+      if (this.model.from && this.model.to) {
+        this.search()
+      }
+    },
+>>>>>>> refs/remotes/origin/master
     search() {
       this.searching = true;
       searchStore.fetch(this.model.from, this.model.to)
