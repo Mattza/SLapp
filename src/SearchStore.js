@@ -1,6 +1,13 @@
 /* global localStorage */
 import axios from 'axios'
 
+let currentlocalStorageVersion = '0.2';
+let storedVersion = localStorage.getItem('localStorageVersion');
+if (currentlocalStorageVersion !== storedVersion) {
+  localStorage.clear();
+  localStorage.setItem('localStorageVersion', currentlocalStorageVersion);
+}
+
 var result = [];
 const quickResultKey = 'quickresult';
 var quickResult = JSON.parse(localStorage.getItem(quickResultKey));
@@ -10,20 +17,49 @@ if (!quickResult) {
     to: []
   }
 }
-function handleQuickResult(fromObj, toObj) {
-  quickResult.from.unshift(fromObj);
-  quickResult.from.length = quickResult.from.length > 3 ? 3 : quickResult.from.length;
-  quickResult.to.unshift(toObj);
-  quickResult.to.length = quickResult.to.length > 3 ? 3 : quickResult.to.length;
+
+function updateQuickResultCounter(list, obj) {
+  let foundFrom = list.find(listObj => obj.Name === listObj.Name);
+  if (foundFrom) {
+    foundFrom.count++;
+    foundFrom.date.push(+new Date());
+  } else {
+    obj.count = 1;
+    obj.date = [+new Date()]
+    list.push(obj);
+  }
 }
-const getSearchIdFromObj = obj => obj.SiteId || obj.Name;
+
+function handleQuickResult(fromObj, toObj) {
+  updateQuickResultCounter(quickResult.from, fromObj);
+  updateQuickResultCounter(quickResult.to, toObj);
+}
+
+const getSearchPartFromObj = (prefix, obj) => {
+  if (obj.Type === 'Address') {
+    let keyCoordLat = prefix + 'CoordLat';
+    let keyCoordLong = prefix + 'CoordLong';
+    let keyCoordName = prefix + 'CoordName';
+    return {
+      [keyCoordLat]: obj.Y / 1000000,
+      [keyCoordLong]: obj.X / 1000000,
+      [keyCoordName]: obj.Name
+    }
+  } else {
+    let key = prefix + 'Id'
+    return { [key]: obj.SiteId || obj.Name }
+  }
+}
 
 const searchStore = {
   fetch: (fromObj, toObj) => {
     handleQuickResult(fromObj, toObj);
     localStorage.setItem(quickResultKey, JSON.stringify(quickResult));
     return new Promise((resolve, reject) => {
-      axios.post('api/search', { originId: getSearchIdFromObj(fromObj), destId: getSearchIdFromObj(toObj) }).then(data => {
+      let searchObj = {};
+      Object.assign(searchObj, getSearchPartFromObj('origin', fromObj));
+      Object.assign(searchObj, getSearchPartFromObj('dest', toObj));
+      axios.post('api/search', searchObj).then(data => {
         result = data.data;
         resolve(result.map(i => Object.assign(i, { detailed: false })));
       })

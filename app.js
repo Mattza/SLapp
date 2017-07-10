@@ -40,10 +40,10 @@ app.post('/api/search', (req, res) => {
         req.body.time = `${parseInt(hour, 10) + 2}:${minute}`;
     }
     fetchNSend(`http://api.sl.se/api2/TravelplannerV2/trip.json?key=${keys.TravelplannerV2}&${obj2queryStr(req.body)}`, res,
-        json => json.TripList.Trip.map(trip => {
+        json => json.TripList.Trip && json.TripList.Trip.map(trip => {
             trip.LegList.Leg = [].concat(trip.LegList.Leg);
             return trip;
-        })
+        }) || []
     );
 });
 app.listen(process.env.PORT || 8081);
