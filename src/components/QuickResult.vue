@@ -6,12 +6,7 @@
 <script>
 export default {
   name: 'quick-result',
-  props: ['list', 'prop'],
-  data() {
-    return {
-      limit: 5
-    }
-  },
+  props: ['list'],
   computed: {
     filteredList: function () {
       return this.list.sort((a, b) => a.count < b.count).slice(0, 3);
@@ -19,7 +14,7 @@ export default {
   },
   methods: {
     click(item) {
-      this.$emit('select', { prop: this.prop, item });
+      this.$emit('select', item);
     }
   }
 }
