@@ -1,10 +1,8 @@
 <template>
   <div>
-    <form v-on:submit.prevent="search()">
-  
-      <search-input @modelChange="changeModel('from',$event)" :placeholder="'Från'" :quickResult="quickResult.from"></search-input>
-      <search-input @modelChange="changeModel('to',$event)" :placeholder="'Till'" :quickResult="quickResult.to"></search-input>
-  
+    <form @submit.prevent="search()">
+      <search-input @modelChange="changeModel('from', $event)" :placeholder="'Från'" :quickResult="quickResult.from"></search-input>
+      <search-input @modelChange="changeModel('to', $event)" :placeholder="'Till'" :quickResult="quickResult.to"></search-input>
       <button class="btn btn-primary" :disabled="searching || !searchEnabled">Sök</button>
       <p v-if="searching">Söker</p>
       <p v-if="error">{{error}}</p>
@@ -57,13 +55,11 @@ export default {
   }
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 form {
-  margin: 20px;
+  margin: 1.25rem;
 }
-
 button:disabled {
   opacity: 0.5;
 }
