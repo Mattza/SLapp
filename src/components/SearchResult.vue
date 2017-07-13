@@ -2,39 +2,55 @@
   <ul class="result">
     <li v-for="res in result" v-on:click="res.detailed=!res.detailed" class="result-item">
       <div class="preview">
-        <div>
+        <div class="preview-head">
+  
           <h3>
-            {{res.LegList|time}} {{res.dur}} min
+            {{res.LegList|time}}
           </h3>
-          <div class="preview-sub">
-            <h5>
-              <span>{{res|origin}}</span>
-              <span>-</span>
-              <span>{{res|destination}}</span>
-            </h5>
-            <div class="preview-sub-leg" v-for="part in getRealLegs(res)">
-              <img v-bind:src="part.type | typeImg" class="preview-sub-leg-img"></img>
-              <span class="preview-sub-leg-text">{{part.line}}</span>
+          <div class="preview-legs">
+            <div class="preview-leg" v-for="part in getRealLegs(res)">
+              <img v-bind:src="part.type | typeImg" class="preview-leg-img"></img>
+              <span class="preview-leg-text">{{part.line}}</span>
             </div>
           </div>
+  
+          <button class="expander">+</button>
         </div>
-        <button class="expander">+</button>
+        <div class="preview-sub">
+          <h4>
+            {{res.dur}} min
+          </h4>
+          <h5>
+            <div class="no-break">{{res|origin}}</div>
+            <div class="no-break">{{res|destination}}</div>
+          </h5>
+        </div>
       </div>
       <div class="body" v-show="res.detailed">
         <template v-for="part in getRealLegs(res)">
           <div v-bind:alt="part.name" class="body-leg">
-            <p class="time">{{part.Origin.time}}</p>
-            <div class="body-leg__icon">
-              <img v-bind:src="part.type | typeImg" class="body-leg__icon-img">
-              <span class="body-leg__icon-text">{{part.line}}</span>
-              </img>
+            <div class="body-leg__first-col">
+              <div class="body-leg__icon">
+                <img v-bind:src="part.type | typeImg" class="body-leg__icon-img">
+                <span class="body-leg__icon-text">{{part.line}}</span>
+                </img>
+              </div>
+              <div>
+              <p class="time">{{part.Origin.time}}</p>
+              <p class="time">{{part.Destination.time}}</p>
+              </div>
             </div>
-            <div>
-              <p>Mot: {{part.dir}}</p>
-              <p v-if="part !== res.LegList.Leg[res.LegList.Leg.length-1]">Byt vid: {{part.Destination.name}}</p>
-            </div>
+            <table class="body-leg__extras">
+              <tr>
+                <td>Mot:</td>
+                <td><h5>{{part.dir}}</h5></td>
+              </tr>
+              <tr v-if="part !== res.LegList.Leg[res.LegList.Leg.length-1]">
+                <td>Byt vid:</td>
+                <td><h5>{{part.Destination.name}}</h5></td>
+              </tr>
+            </table>
           </div>
-  
         </template>
       </div>
     </li>
@@ -67,12 +83,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+$first-col:9rem;
 h3,
+h4,
 h5,
 p {
   margin: 0;
+  text-align: left;
 }
 
+h5{
+  margin-left:-1px;
+}
 .result {
   list-style-type: none;
   padding: 0;
@@ -87,25 +109,44 @@ p {
 
 .preview {
   position: relative;
-  &-sub {
-    margin-right: 2em;
+  &-head>:first-child,
+  &-sub>:first-child {
+    width: $first-col;
+    flex-shrink: 0;
+  }
+
+  &-head {
     display: flex;
     align-items: center;
-    justify-content: center;
+    margin-bottom: 1em;
+    justify-content: space-between;
+  }
 
-    &-leg {
-      margin: 0 0.5rem;
-      position: relative;
-      &-img {
-        width: 2rem;
-      }
-      &-text {
-        position: absolute;
-        top: calc(50%);
-        left: 0;
-        right: 0;
-        font-size: 0.7em;
-      }
+  &-sub {
+    display: flex;
+    align-items: center;
+  }
+
+  &-legs {
+    display: flex;
+    flex-grow: 1;
+  }
+
+  &-leg {
+    margin-right: 1rem;
+    position: relative;
+    height: 2rem;
+
+    &-img {
+      width: 2rem;
+    }
+
+    &-text {
+      position: absolute;
+      top: calc(55%);
+      left: 0;
+      right: 0;
+      font-size: 0.7em;
     }
   }
 }
@@ -121,15 +162,22 @@ p {
     align-items: center;
     position: relative;
 
-    &>*{
-      margin:0.5rem;
-    }
 
+    &>* {}
+
+    &__first-col {
+      width: $first-col;
+      display: flex;
+      align-items: center;
+    }
     &__icon {
       position: relative;
+      margin-right: 1rem;
+
       &-img {
         width: 3rem;
       }
+
       &-text {
         position: absolute;
         top: calc(50%);
@@ -138,15 +186,23 @@ p {
         font-size: 1.05em;
       }
     }
+    &__extras {
+      text-align: left;
+      td:first-child {
+        width: 4rem;
+      }
+    }
   }
 }
 
+td {
+  padding: 0;
+}
+table{
+  margin-left: -3px;
+}
 
 .expander {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
   border-radius: 50%;
   height: 2rem;
   width: 2rem;
@@ -155,8 +211,7 @@ p {
   border: 0;
 }
 
-.type-icon {
-  width: 3rem;
-  height: 3rem;
+.time {
+  font-weight: bold;
 }
 </style>
