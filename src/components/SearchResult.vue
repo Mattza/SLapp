@@ -3,7 +3,6 @@
     <li v-for="res in result" v-on:click="res.detailed=!res.detailed" class="result-item">
       <div class="preview">
         <div class="preview-head">
-  
           <h3>
             {{res.LegList|time}}
           </h3>
@@ -13,7 +12,6 @@
               <span class="preview-leg-text">{{part.line}}</span>
             </div>
           </div>
-  
           <button class="expander">+</button>
         </div>
         <div class="preview-sub">
@@ -96,14 +94,17 @@ h5{
   margin-left:-1px;
 }
 .result {
+  background-color: #ddd;
   list-style-type: none;
   padding: 0;
   margin: 0;
+  overflow: auto;
+  height: 100%;
 
   &-item {
-    margin: 0 10px;
-    padding: 10px 0;
-    border-bottom: 1px solid black;
+    margin: 0.5rem;
+    padding: 10px;
+    background-color: #fff;
   }
 }
 

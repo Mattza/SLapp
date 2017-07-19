@@ -18,6 +18,9 @@ if (!quickResult) {
   }
 }
 
+const deviationKey = 'deviation';
+var deviationGids = JSON.parse(localStorage.getItem(deviationKey)) || [];
+
 function updateQuickResultCounter(list, obj) {
   let foundFrom = list.find(listObj => obj.Name === listObj.Name);
   if (foundFrom) {
@@ -71,6 +74,16 @@ const searchStore = {
         resolve(data.data);
       })
     })
+  },
+  deviations: async searchObj => {
+    let data = await axios.post('api/deviations', searchObj);
+    console.log(data);
+    return data.data;
+  },
+  deviationGids,
+  archiveDeviation: deviation => {
+    deviationGids.push(deviation.DevCaseGid);
+    localStorage.setItem(deviationKey, JSON.stringify(deviationGids));
   },
   getResult: () => result,
   quickResult: () => quickResult

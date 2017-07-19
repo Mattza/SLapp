@@ -7,17 +7,20 @@
       <p v-if="searching">Söker</p>
       <p v-if="error">{{error}}</p>
     </form>
+    <!-- <deviations></deviations> -->
   </div>
 </template>
 
 <script>
 import searchStore from './../SearchStore';
 import searchInput from './SearchInput';
+import deviations from './Deviations'
 
 export default {
   name: 'searchForm',
   components: {
-    'search-input': searchInput
+    'search-input': searchInput,
+    deviations
   },
   data() {
     return {
