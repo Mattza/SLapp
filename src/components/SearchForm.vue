@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div class="onboarding" v-if="firstTime">
+      <h3>Välkommen till den smarta SL-appen!</h3>
+      <p>Denna app kommer successivt lära sig hur du söker och kommer kunna föreslå resmål.</p>
+      <p></p>
+    </div>
     <form @submit.prevent="search()">
       <search-input @modelChange="changeModel('from', $event)" :placeholder="'Från'" :quickResult="quickResult.from"></search-input>
       <search-input @modelChange="changeModel('to', $event)" :placeholder="'Till'" :quickResult="quickResult.to"></search-input>
@@ -7,6 +12,9 @@
       <p v-if="searching">Söker</p>
       <p v-if="error">{{error}}</p>
     </form>
+     <div class="offboarding" v-if="!firstTime">
+      <p>Inom kort kommer den även kunna hjälpa dig upptäcka störningar i trafiken</p>
+    </div>
     <!-- <deviations></deviations> -->
   </div>
 </template>
@@ -25,6 +33,7 @@ export default {
   data() {
     return {
       quickResult: searchStore.quickResult(),
+      firstTime: searchStore.firstTime,
       model: {
         from: undefined,
         to: undefined
@@ -63,6 +72,7 @@ export default {
 form {
   margin: 1.25rem;
 }
+
 button:disabled {
   opacity: 0.5;
 }

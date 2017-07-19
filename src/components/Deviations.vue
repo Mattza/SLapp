@@ -21,7 +21,7 @@ import searchStore from './../SearchStore';
 
 // let getDeviations = async () => {
 //   let data = await searchStore.deviations({ lineNumber: 35 });
-//   data.data.forEach(item => deviations.push(item))  
+//   data.data.forEach(item => deviations.push(item))
 // }
 
 // getDeviations();

@@ -6,22 +6,27 @@
           <h3>
             {{res.LegList|time}}
           </h3>
+          <h5>
+            <div class="no-break">{{res|origin}}</div>
+            <div class="no-break">{{res|destination}}</div>
+          </h5>
+  
+          <button class="expander" v-if="!res.detailed">+</button>
+          <button class="expander expanderus" v-if="res.detailed">
+            <span>-</span>
+          </button>
+  
+        </div>
+        <div class="preview-sub">
+          <h4>
+            {{res.dur}} min
+          </h4>
           <div class="preview-legs">
             <div class="preview-leg" v-for="part in getRealLegs(res)">
               <img v-bind:src="part.type | typeImg" class="preview-leg-img"></img>
               <span class="preview-leg-text">{{part.line}}</span>
             </div>
           </div>
-          <button class="expander">+</button>
-        </div>
-        <div class="preview-sub">
-          <h4>
-            {{res.dur}} min
-          </h4>
-          <h5>
-            <div class="no-break">{{res|origin}}</div>
-            <div class="no-break">{{res|destination}}</div>
-          </h5>
         </div>
       </div>
       <div class="body" v-show="res.detailed">
@@ -34,18 +39,22 @@
                 </img>
               </div>
               <div>
-              <p class="time">{{part.Origin.time}}</p>
-              <p class="time">{{part.Destination.time}}</p>
+                <p class="time">{{part.Origin.time}}</p>
+                <p class="time">{{part.Destination.time}}</p>
               </div>
             </div>
             <table class="body-leg__extras">
               <tr>
-                <td>Mot:</td>
-                <td><h5>{{part.dir}}</h5></td>
+                <td><small>Mot:</small></td>
+                <td>
+                  <h5>{{part.dir}}</h5>
+                </td>
               </tr>
               <tr v-if="part !== res.LegList.Leg[res.LegList.Leg.length-1]">
-                <td>Byt vid:</td>
-                <td><h5>{{part.Destination.name}}</h5></td>
+                <td><small>Byt vid:</small></td>
+                <td>
+                  <h5>{{part.Destination.name}}</h5>
+                </td>
               </tr>
             </table>
           </div>
@@ -90,9 +99,10 @@ p {
   text-align: left;
 }
 
-h5{
-  margin-left:-1px;
+h5 {
+  margin-left: -1px;
 }
+
 .result {
   background-color: #ddd;
   list-style-type: none;
@@ -103,7 +113,7 @@ h5{
 
   &-item {
     margin: 0.5rem;
-    padding: 10px;
+    padding: 0.5rem;
     background-color: #fff;
   }
 }
@@ -118,25 +128,33 @@ h5{
 
   &-head {
     display: flex;
-    align-items: center;
-    margin-bottom: 1em;
-    justify-content: space-between;
+
+    h5 {
+      max-width: calc(100% - 185px);
+      overflow: hidden;
+    }
   }
 
   &-sub {
     display: flex;
+    overflow: hidden;
     align-items: center;
   }
 
   &-legs {
     display: flex;
-    flex-grow: 1;
+    flex-grow: 0;
+    padding: 0.5em;
   }
 
   &-leg {
     margin-right: 1rem;
     position: relative;
     height: 2rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
 
     &-img {
       width: 2rem;
@@ -153,10 +171,13 @@ h5{
 }
 
 .body {
+  background-color: #eee;
+  margin: 0.5rem -0.5rem -0.5rem -0.5rem;
+  padding: 0.5rem;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 1em;
 
   &-leg {
     display: flex;
@@ -170,6 +191,7 @@ h5{
       width: $first-col;
       display: flex;
       align-items: center;
+      flex-shrink: 0;
     }
     &__icon {
       position: relative;
@@ -199,7 +221,8 @@ h5{
 td {
   padding: 0;
 }
-table{
+
+table {
   margin-left: -3px;
 }
 
@@ -209,7 +232,16 @@ table{
   width: 2rem;
   font-size: 1.5rem;
   background-color: #03a9f4;
+  color: #fff;
   border: 0;
+  margin-left: auto;
+  &--minus {
+    font-size: 2rem;
+    >* {
+      margin-top: -6px;
+      display: block;
+    }
+  }
 }
 
 .time {

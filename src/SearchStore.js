@@ -7,14 +7,14 @@ if (currentlocalStorageVersion !== storedVersion) {
   localStorage.clear();
   localStorage.setItem('localStorageVersion', currentlocalStorageVersion);
 }
-
+let firstTime = !storedVersion;
 var result = [];
 const quickResultKey = 'quickresult';
 var quickResult = JSON.parse(localStorage.getItem(quickResultKey));
 if (!quickResult) {
   quickResult = {
-    from: [],
-    to: []
+    from: [{ Name: 'T-centralen', date: [] }, { Name: 'Slussen', date: [] }, { Name: 'Sundbyberg', date: [] }],
+    to: [{ Name: 'T-centralen', date: [] }, { Name: 'Slussen', date: [] }, { Name: 'Sundbyberg', date: [] }]
   }
 }
 
@@ -86,6 +86,7 @@ const searchStore = {
     localStorage.setItem(deviationKey, JSON.stringify(deviationGids));
   },
   getResult: () => result,
-  quickResult: () => quickResult
+  quickResult: () => quickResult,
+  firstTime
 }
 export default searchStore
