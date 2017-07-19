@@ -12,7 +12,8 @@ let sendErr = res => err => {
 
 let keys = {
     typeahead: '2a6b74a2e8f34ae895a06efe53668862',
-    TravelplannerV2: '6a517447db2c4a72adc256399cef82ad'
+    TravelplannerV2: '6a517447db2c4a72adc256399cef82ad',
+    deviations: '61c1121844b14fd8bc6d120e461135ad'
 }
 
 app.use(require('compression')({ level: 9 }));
@@ -33,6 +34,10 @@ app.get('/demo.appcache', (req, res) => {
 app.post('/api/typeahead', (req, res) => {
     fetchNSend(`http://api.sl.se/api2/typeahead.json?key=${keys.typeahead}&${obj2queryStr(req.body)}`, res, json => json.ResponseData);
 });
+
+app.post('/api/deviations', (req, res) => {
+    fetchNSend(`http://api.sl.se/api2/deviations.json?key=${keys.deviations}&${obj2queryStr(req.body)}`, res, json => json.ResponseData);
+})
 
 app.post('/api/search', (req, res) => {
     if (!req.body.time) {

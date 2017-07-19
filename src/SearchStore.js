@@ -7,16 +7,19 @@ if (currentlocalStorageVersion !== storedVersion) {
   localStorage.clear();
   localStorage.setItem('localStorageVersion', currentlocalStorageVersion);
 }
-
+let firstTime = !storedVersion;
 var result = [];
 const quickResultKey = 'quickresult';
 var quickResult = JSON.parse(localStorage.getItem(quickResultKey));
 if (!quickResult) {
   quickResult = {
-    from: [],
-    to: []
+    from: [{ Name: 'T-centralen', date: [] }, { Name: 'Slussen', date: [] }, { Name: 'Sundbyberg', date: [] }],
+    to: [{ Name: 'T-centralen', date: [] }, { Name: 'Slussen', date: [] }, { Name: 'Sundbyberg', date: [] }]
   }
 }
+
+const deviationKey = 'deviation';
+var deviationGids = JSON.parse(localStorage.getItem(deviationKey)) || [];
 
 function updateQuickResultCounter(list, obj) {
   let foundFrom = list.find(listObj => obj.Name === listObj.Name);
@@ -72,7 +75,18 @@ const searchStore = {
       })
     })
   },
+  deviations: async searchObj => {
+    let data = await axios.post('api/deviations', searchObj);
+    console.log(data);
+    return data.data;
+  },
+  deviationGids,
+  archiveDeviation: deviation => {
+    deviationGids.push(deviation.DevCaseGid);
+    localStorage.setItem(deviationKey, JSON.stringify(deviationGids));
+  },
   getResult: () => result,
-  quickResult: () => quickResult
+  quickResult: () => quickResult,
+  firstTime
 }
 export default searchStore

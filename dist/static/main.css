@@ -27,15 +27,18 @@
   vertical-align: middle;
   border: 1px solid transparent;
   border-radius: 0;
-  padding: 0.85em;
-  margin: 0 0 1rem 0;
-  font-size: 0.9rem;
+  margin: 0 0 1em 0;
+  font-size: 0.8rem;
   width: 30%;
+  min-height: 3.5em;
+  text-transform: capitalize;
+    word-break: break-word;
 }
 
 .btn-primary {
   background-color: #2199e8;
   color: #fefefe;
+  margin-top: 0.5em
 }
 
 .btn-default {
