@@ -77,7 +77,6 @@ const searchStore = {
   },
   deviations: async searchObj => {
     let data = await axios.post('api/deviations', searchObj);
-    console.log(data);
     return data.data;
   },
   deviationGids,
@@ -85,7 +84,10 @@ const searchStore = {
     deviationGids.push(deviation.DevCaseGid);
     localStorage.setItem(deviationKey, JSON.stringify(deviationGids));
   },
-  getResult: () => result,
+  getResult: () => {
+    console.log('?'); 
+    return result
+  },
   quickResult: () => quickResult,
   firstTime
 }

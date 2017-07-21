@@ -12,10 +12,6 @@
       <p v-if="searching">Söker</p>
       <p v-if="error">{{error}}</p>
     </form>
-     <div class="offboarding" v-if="!firstTime">
-      <p>Inom kort kommer den även kunna hjälpa dig upptäcka störningar i trafiken</p>
-    </div>
-    <!-- <deviations></deviations> -->
   </div>
 </template>
 
@@ -54,7 +50,7 @@ export default {
         searchStore.fetch(this.model.from, this.model.to)
           .then(() => {
             this.searching = false;
-            this.$routz.replace('/search-result');
+            this.$routz.push('/resultat');
           },
           error => {
             this.error = error;

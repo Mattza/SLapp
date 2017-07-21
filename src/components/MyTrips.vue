@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h3>Fyll i den linjen du vill ha information om!</h3>
-    <input @input="onChange" />
+    <input />
     <ul>
       <li v-for="deviation in deviations" :key="deviation.DevCaseGid" v-if="!deviationGids.includes(deviation.DevCaseGid)" @click="archive(deviation)">
         <h3>
@@ -27,22 +26,6 @@ import searchStore from './../SearchStore';
 
 // getDeviations();
 
-function debounce(func, wait, immediate) {
-  var timeout;
-  return function () {
-    var context = this;
-    var args = arguments;
-    var later = function () {
-      timeout = null;
-      if (!immediate) func.apply(context, args);
-    };
-    var callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
-  };
-};
-
 export default {
   name: 'deviations',
   props: ['list'],
@@ -53,11 +36,6 @@ export default {
     }
   },
   methods: {
-    onChange: debounce(function (e) {
-      searchStore.deviations({ lineNumber: e.target.value }).then(res => {
-        this.deviations = res;
-      })
-    }, 500),
     archive(item) {
       searchStore.archiveDeviation(item);
     }

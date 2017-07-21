@@ -45,13 +45,17 @@
             </div>
             <table class="body-leg__extras">
               <tr>
-                <td><small>Mot:</small></td>
+                <td>
+                  <small>Mot:</small>
+                </td>
                 <td>
                   <h5>{{part.dir}}</h5>
                 </td>
               </tr>
               <tr v-if="part !== res.LegList.Leg[res.LegList.Leg.length-1]">
-                <td><small>Byt vid:</small></td>
+                <td>
+                  <small>Byt vid:</small>
+                </td>
                 <td>
                   <h5>{{part.Destination.name}}</h5>
                 </td>
@@ -82,7 +86,7 @@ export default {
   },
   created() {
     if (this.result.length === 0) {
-      this.$routz.push('search')
+      this.$routz.push('/')
     }
   }
 }
