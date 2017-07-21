@@ -84,10 +84,7 @@ const searchStore = {
     deviationGids.push(deviation.DevCaseGid);
     localStorage.setItem(deviationKey, JSON.stringify(deviationGids));
   },
-  getResult: () => {
-    console.log('?'); 
-    return result
-  },
+  getResult: () => result,
   quickResult: () => quickResult,
   firstTime
 }
