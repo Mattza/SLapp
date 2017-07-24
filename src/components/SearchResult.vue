@@ -1,6 +1,6 @@
 <template>
   <ul class="result">
-    <li v-for="res in result" v-on:click="res.detailed=!res.detailed" class="result-item">
+    <li v-for="res in result" @click="res.detailed=!res.detailed" class="result-item">
       <div class="preview">
         <div class="preview-head">
           <h3>
@@ -12,7 +12,7 @@
           </h5>
   
           <button class="expander" v-if="!res.detailed">+</button>
-          <button class="expander expanderus" v-if="res.detailed">
+          <button class="expander" v-if="res.detailed">
             <span>-</span>
           </button>
   
@@ -118,6 +118,7 @@ h5 {
   &-item {
     margin: 0.5rem;
     padding: 0.5rem;
+    border-radius: 0.25em;
     background-color: #fff;
   }
 }

@@ -9,6 +9,7 @@ import SearchResult from './components/SearchResult'
 import Deviations from './components/Deviations'
 import MyTrips from './components/MyTrips'
 import About from './components/About'
+import AllPages from './components/AllPages'
 
 const router = new VueRouter({
   routes: [
@@ -16,6 +17,7 @@ const router = new VueRouter({
     { path: '/storningar', component: Deviations },
     { path: '/mina-resor', component: MyTrips },
     { path: '/om', component: About },
+    { path: '/all', component: AllPages },
     { path: '/', component: SearchForm }
   ]
 })
@@ -28,4 +30,3 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
-

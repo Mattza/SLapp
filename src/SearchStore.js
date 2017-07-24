@@ -16,6 +16,7 @@ if (!quickResult) {
     from: [{ Name: 'T-centralen', date: [] }, { Name: 'Slussen', date: [] }, { Name: 'Sundbyberg', date: [] }],
     to: [{ Name: 'T-centralen', date: [] }, { Name: 'Slussen', date: [] }, { Name: 'Sundbyberg', date: [] }]
   }
+  localStorage.setItem(quickResultKey, JSON.stringify(quickResult));
 }
 
 const deviationKey = 'deviation';

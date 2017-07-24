@@ -16,15 +16,9 @@
         <header>
           <h1>Meny</h1>
         </header>
-        <div v-for="link in links" @click="closeLeft()" >
+        <div v-for="link in links" @click="closeLeft()">
           <router-link class="left__link" :to="link.link">{{link.text}}</router-link>
         </div>
-        <!-- <router-link class="left__link" @click="closeLeft()" to="/">Sök</router-link>
-          <router-link class="left__link" @click="closeLeft()" to="/mina-resor">Mina resor</router-link>
-          <router-link class="left__link" @click="closeLeft()" to="/storningar">Störningar</router-link>
-          <router-link class="left__link" @click="closeLeft()" to="/om">Om SLapp</router-link> -->
-        </li>
-        </ul>
       </div>
     </aside>
   </div>
@@ -45,7 +39,7 @@ export default {
       },
       links: [
         { link: '/', text: 'Sökning' },
-        { link: '/mina-resor', text: 'Mina resor' },
+        { link: '/mina-resor', text: 'Mina stationer' },
         { link: '/storningar', text: 'Störningar' },
         { link: '/om', text: 'Om SLapp' }
       ]
@@ -88,12 +82,17 @@ header {
   background-color: #03a9f4;
   color: #fefefe;
   padding: 1em;
+  flex-shrink: 0;
 }
 
 header img {
   margin: -1em;
   padding: 1em;
   cursor: pointer;
+}
+
+#app>:nth-child(2) {
+  overflow: auto;
 }
 
 .left {
