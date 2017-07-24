@@ -1,1 +1,12 @@
-<!DOCTYPE html><html manifest=demo.appcache><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>I like SLAPP</title><link rel=stylesheet href=static/main.css><link href=/static/css/app.css rel=stylesheet></head><body><div id=app></div><script type=text/javascript src=/static/js/manifest.js></script><script type=text/javascript src=/static/js/vendor.js></script><script type=text/javascript src=/static/js/app.js></script></body></html>
+<!DOCTYPE html><html manifest=demo.appcache><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>I like SLAPP</title><link rel=stylesheet href=static/main.css><link href=/static/css/app.css rel=stylesheet></head><body><div id=app></div><script type=text/javascript src=/static/js/manifest.js></script><script type=text/javascript src=/static/js/vendor.js></script><script type=text/javascript src=/static/js/app.js></script>
+  <script type="text/javascript">
+  ( function() {
+    if (window.CHITIKA === undefined) { window.CHITIKA = { 'units' : [] }; };
+    var unit = {"calltype":"async[2]","publisher":"mattza","width":550,"height":250,"sid":"Chitika Default"};
+    var placement_id = window.CHITIKA.units.length;
+    window.CHITIKA.units.push(unit);
+    document.write('<div id="chitikaAdBlock-' + placement_id + '"></div>');
+}());
+</script>
+<script type="text/javascript" src="//cdn.chitika.net/getads.js" async></script>
+  </body></html>
