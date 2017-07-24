@@ -12,7 +12,6 @@
       <p v-if="searching">Söker</p>
       <p v-if="error">{{error}}</p>
     </form>
-    <iframe src="http://go.pub2srv.com/afu.php?id=1308079" style="width: 100%;border: 0;height: 115px;"></iframe>
   </div>
 </template>
 
