@@ -1,3 +1,19 @@
+.chitikaAdBlock{
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}
+.chitikaAdContainer{
+  display: none;
+}
+.ad ~ .chitikaAdContainer{
+  display: block;
+}
+#app.ad>:nth-child(2) {
+  height: calc(100% - 318px);
+}
+
+
 .clearfix:after {
   visibility: hidden;
   display: block;

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-bind:class=" $route.path ==='/'?'ad':''">
     <header>
       <img src="static/hamburger.svg" @click="openLeft()" />
       <h1 class="main-header-heading">
