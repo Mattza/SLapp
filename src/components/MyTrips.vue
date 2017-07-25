@@ -2,12 +2,12 @@
   <div>
     <h1>Mina stationer</h1>
     <div class="result">
-      <div v-for="result in stations" @click="remove(result)" class="result-item">
+      <div v-for="result in stations" class="result-item">
         <div class="preview">
           <div class="preview-head">
             <h3>{{result.Name}}</h3>
             <button class="expander">
-              <img src="static/trash-can.svg" @click="openLeft()" />
+              <img src="static/trash-can.svg" @click="remove(result)" />
             </button>
           </div>
           <div class="preview-body">
@@ -22,7 +22,7 @@
 <script>
 import searchStore from './../SearchStore';
 
-let convertObj = (item, dateKey) => ({ Name: item.Name, SiteId: item.SiteId, [dateKey]: item.date })
+let convertObj = dateKey => item => ({ Name: item.Name, SiteId: item.SiteId, [dateKey]: item.date })
 
 export default {
   name: 'mytrips',
@@ -34,10 +34,7 @@ export default {
   },
   computed: {
     stations: function () {
-      let arr = [];
-      this.quickResult.from.forEach(item => {
-        arr.push(convertObj(item, 'fromDate'))
-      })
+      let arr = this.quickResult.from.map(convertObj('fromDate'));
       let SiteIds = this.quickResult.from.filter(item => !!item.SiteId).map(item => item.SiteId);
       let Names = this.quickResult.from.map(item => item.Name);
       this.quickResult.to.forEach(item => {
@@ -46,14 +43,14 @@ export default {
             arr.find(arrs => arrs.SiteId === item.SiteId).toDate = item.date;
           } else {
             SiteIds.push(item.SiteId);
-            arr.push(convertObj(item, 'toDate'));
+            arr.push(convertObj('toDate')(item));
           }
         } else if (item.Name) {
           if (Names.includes(item.Name)) {
             arr.find(arrs => arrs.Name === item.Name).toDate = item.date;
           } else {
             Names.push(item.Name);
-            arr.push(convertObj(item, 'toDate'));
+            arr.push(convertObj('toDate')(item));
           }
         }
       });
@@ -68,7 +65,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 h3 {
   margin: 0;
 }
