@@ -82,11 +82,8 @@ export default {
     }
   },
   methods: {
-    fetchLater: function () {
-      let _this = this;
-      SearchStore.fetchLater().then(function () {
-        _this.result = SearchStore.getResult();
-      })
+    fetchLater: async function () {
+      this.result = await SearchStore.fetchLater();
     }
   },
   filters: {

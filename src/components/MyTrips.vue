@@ -25,7 +25,7 @@ import searchStore from './../SearchStore';
 let convertObj = (item, dateKey) => ({ Name: item.Name, SiteId: item.SiteId, [dateKey]: item.date })
 
 export default {
-  name: 'deviations',
+  name: 'mytrips',
   props: ['list'],
   data() {
     return {

@@ -19,11 +19,8 @@ if (!quickResult) {
   localStorage.setItem(quickResultKey, JSON.stringify(quickResult));
 }
 
-const deviationKey = 'deviation';
-var deviationGids = JSON.parse(localStorage.getItem(deviationKey)) || [];
-
 function updateQuickResultCounter(list, obj) {
-  let foundFrom = list.find(listObj => obj.Name === listObj.Name);
+  let foundFrom = list.find(item => obj.Name === item.Name);
   if (foundFrom) {
     foundFrom.count++;
     foundFrom.date.push(+new Date());
@@ -41,74 +38,52 @@ function handleQuickResult(fromObj, toObj) {
 
 const getSearchPartFromObj = (prefix, obj) => {
   if (obj.Type === 'Address') {
-    let keyCoordLat = prefix + 'CoordLat';
-    let keyCoordLong = prefix + 'CoordLong';
-    let keyCoordName = prefix + 'CoordName';
     return {
-      [keyCoordLat]: obj.Y / 1000000,
-      [keyCoordLong]: obj.X / 1000000,
-      [keyCoordName]: obj.Name
+      [prefix + 'CoordLat']: obj.Y / 1000000,
+      [prefix + 'CoordLong']: obj.X / 1000000,
+      [prefix + 'CoordName']: obj.Name
     }
   } else {
-    let key = prefix + 'Id'
-    return { [key]: obj.SiteId || obj.Name }
+    return { [prefix + 'Id']: obj.SiteId || obj.Name }
   }
 }
 
 let currentSearch;
-let fetch = (searchObj) => new Promise((resolve, reject) => {
-  axios.post('api/search', searchObj).then(data => {
-    resolve(data.data.map(i => Object.assign(i, { detailed: false })));
-  })
-})
+let fetch = async function (searchObj) {
+  let data = (await axios.post('api/search', searchObj)).data;
+  return data.map(item => Object.assign(item, { detailed: false }));
+}
+
+let nextMinute = (time) => {
+  let now = new Date(`${new Date().toISOString().split('T')[0]}T${time}Z`);
+  now.setMinutes(now.getMinutes() + 1)
+  return now.toISOString().split('T')[1].slice(0, 5);
+}
 
 const searchStore = {
-  fetch: (fromObj, toObj, others) => {
-    currentSearch = { fromObj, toObj, others };
+  fetch: async (fromObj, toObj) => {
+    currentSearch = { fromObj, toObj };
     handleQuickResult(fromObj, toObj);
     localStorage.setItem(quickResultKey, JSON.stringify(quickResult));
     let searchObj = {};
     Object.assign(searchObj, getSearchPartFromObj('origin', fromObj));
     Object.assign(searchObj, getSearchPartFromObj('dest', toObj));
-    let prom = fetch(searchObj)
-    prom.then(data => {
-      result = data
-    })
-    return prom;
+    result = await fetch(searchObj);
   },
-  fetchLater: () => {
+  fetchLater: async () => {
     if (currentSearch && result) {
       let { date, time } = result[result.length - 1].LegList.Leg[0].Origin;
       let searchObj = {};
       Object.assign(searchObj, getSearchPartFromObj('origin', currentSearch.fromObj));
       Object.assign(searchObj, getSearchPartFromObj('dest', currentSearch.toObj));
       searchObj.date = date;
-      let now = new Date(`${date}T${time}Z`);
-      now.setMinutes(now.getMinutes() + 1)
-      searchObj.time = now.toISOString().split('T')[1].slice(0, 5);
-      let prom = fetch(searchObj)
-      prom.then(data => {
-        data.forEach(item => result.push(item));
-      });
-      return prom;
+      searchObj.time = nextMinute(time)
+      let newResult = await fetch(searchObj)
+      result = result.concat(newResult);
+      return result;
     }
   },
-  typeahead: str => {
-    return new Promise((resolve, reject) => {
-      axios.post('api/typeahead', { 'searchstring': str }).then(data => {
-        resolve(data.data);
-      })
-    })
-  },
-  deviations: async searchObj => {
-    let data = await axios.post('api/deviations', searchObj);
-    return data.data;
-  },
-  deviationGids,
-  archiveDeviation: deviation => {
-    deviationGids.push(deviation.DevCaseGid);
-    localStorage.setItem(deviationKey, JSON.stringify(deviationGids));
-  },
+  typeahead: async str => (await axios.post('api/typeahead', { 'searchstring': str })).data,
   getResult: () => result,
   quickResult: () => quickResult,
   firstTime
