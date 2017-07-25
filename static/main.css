@@ -1,6 +1,5 @@
 .chitikaAdBlock{
     width: 100%;
-    position: absolute;
     bottom: 0;
 }
 .chitikaAdContainer{
@@ -9,8 +8,6 @@
 .ad ~ .chitikaAdContainer{
   display: block;
 }
-#app.ad>:nth-child(2) {
-  /* //height: calc(100% - 318px); */
 }
 
 
