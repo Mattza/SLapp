@@ -55,19 +55,43 @@ const getSearchPartFromObj = (prefix, obj) => {
   }
 }
 
+let currentSearch;
+let fetch = (searchObj) => new Promise((resolve, reject) => {
+  axios.post('api/search', searchObj).then(data => {
+    resolve(data.data.map(i => Object.assign(i, { detailed: false })));
+  })
+})
+
 const searchStore = {
-  fetch: (fromObj, toObj) => {
+  fetch: (fromObj, toObj, others) => {
+    currentSearch = { fromObj, toObj, others };
     handleQuickResult(fromObj, toObj);
     localStorage.setItem(quickResultKey, JSON.stringify(quickResult));
-    return new Promise((resolve, reject) => {
-      let searchObj = {};
-      Object.assign(searchObj, getSearchPartFromObj('origin', fromObj));
-      Object.assign(searchObj, getSearchPartFromObj('dest', toObj));
-      axios.post('api/search', searchObj).then(data => {
-        result = data.data;
-        resolve(result.map(i => Object.assign(i, { detailed: false })));
-      })
+    let searchObj = {};
+    Object.assign(searchObj, getSearchPartFromObj('origin', fromObj));
+    Object.assign(searchObj, getSearchPartFromObj('dest', toObj));
+    let prom = fetch(searchObj)
+    prom.then(data => {
+      result = data
     })
+    return prom;
+  },
+  fetchLater: () => {
+    if (currentSearch && result) {
+      let { date, time } = result[result.length - 1].LegList.Leg[0].Origin;
+      let searchObj = {};
+      Object.assign(searchObj, getSearchPartFromObj('origin', currentSearch.fromObj));
+      Object.assign(searchObj, getSearchPartFromObj('dest', currentSearch.toObj));
+      searchObj.date = date;
+      let now = new Date(`${date}T${time}Z`);
+      now.setMinutes(now.getMinutes() + 1)
+      searchObj.time = now.toISOString().split('T')[1].slice(0, 5);
+      let prom = fetch(searchObj)
+      prom.then(data => {
+        data.forEach(item => result.push(item));
+      });
+      return prom;
+    }
   },
   typeahead: str => {
     return new Promise((resolve, reject) => {

@@ -65,6 +65,9 @@
         </template>
       </div>
     </li>
+    <li class="result-item">
+      <button class="btn btn-primary" @click="fetchLater()">Senare</button>
+    </li>
   </ul>
 </template>
 <script>
@@ -76,6 +79,14 @@ export default {
     return {
       result: SearchStore.getResult(),
       getRealLegs: res => res.LegList.Leg.filter(leg => leg.type !== 'WALK')
+    }
+  },
+  methods: {
+    fetchLater: function () {
+      let _this = this;
+      SearchStore.fetchLater().then(function () {
+        _this.result = SearchStore.getResult();
+      })
     }
   },
   filters: {
