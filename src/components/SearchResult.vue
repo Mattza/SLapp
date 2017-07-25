@@ -189,9 +189,6 @@ h5 {
     align-items: center;
     position: relative;
 
-
-    &>* {}
-
     &__first-col {
       width: $first-col;
       display: flex;

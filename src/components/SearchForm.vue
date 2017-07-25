@@ -18,19 +18,11 @@
 <script>
   import searchStore from './../SearchStore';
   import searchInput from './SearchInput';
-  import deviations from './Deviations';
-
-  if (window.CHITIKA === undefined) { window.CHITIKA = { 'units': [] }; };
-  var unit = { calltype: 'async[2]', publisher: 'mattza', width: 300, height: 250, sid: 'Chitika Default' };
-  var placementId = window.CHITIKA.units.length;
-  window.CHITIKA.units.push(unit);
-  document.write('<div id="chitikaAdBlock-' + placementId + '"></div>');
 
   export default {
     name: 'searchForm',
     components: {
-      'search-input': searchInput,
-      deviations
+      'search-input': searchInput
     },
     data() {
       return {
