@@ -1,6 +1,5 @@
 .chitikaAdBlock{
     width: 100%;
-    bottom: 0;
 }
 .chitikaAdContainer{
   display: none;
@@ -8,6 +7,15 @@
 .ad ~ .chitikaAdContainer{
   display: block;
 }
+#app.ad {
+    height: auto;
+    flex-shrink: 0;
+    flex-grow: 1;
+}
+body{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 
