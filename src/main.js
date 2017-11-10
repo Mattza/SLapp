@@ -6,11 +6,18 @@ import VueRouter from 'vue-router'
 import App from './App'
 import SearchForm from './components/SearchForm'
 import SearchResult from './components/SearchResult'
+import Deviations from './components/Deviations'
+import MyTrips from './components/MyTrips'
+import About from './components/About'
+import AllPages from './components/AllPages'
 
 const router = new VueRouter({
   routes: [
-    { path: '/search', component: SearchForm },
-    { path: '/search-result', component: SearchResult },
+    { path: '/resultat', component: SearchResult },
+    { path: '/storningar', component: Deviations },
+    { path: '/mina-resor', component: MyTrips },
+    { path: '/om', component: About },
+    { path: '/all', component: AllPages },
     { path: '/', component: SearchForm }
   ]
 })
@@ -23,4 +30,3 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
-

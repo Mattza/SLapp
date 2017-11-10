@@ -1,3 +1,25 @@
+.chitikaAdBlock{
+    width: 100%;
+}
+.chitikaAdContainer{
+  display: none;
+}
+.ad ~ .chitikaAdContainer{
+  display: block;
+}
+#app.ad {
+    height: calc(100% - 50px);
+    flex-shrink: 0;
+    flex-grow: 1;
+}
+body{
+  /* display: flex;
+  flex-direction: column;
+  height: 100vh; */
+    margin: 0;
+}
+
+
 .clearfix:after {
   visibility: hidden;
   display: block;
@@ -47,7 +69,7 @@
   border: 1px solid #2199e8;
 }
 
-input[type="text"] {
+input[type="text"],input[type="number"] {
   display: block;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -68,8 +90,15 @@ input[type="text"] {
   -webkit-appearance: none;
   -moz-appearance: none;
 }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+input[type="number"]:focus{
   border: 1px solid #8a8a8a;
   background-color: #fefefe;
   outline: none;

@@ -8,6 +8,7 @@
     "start": "npm install",
     "poststart": "node app.js",
     "dev": "concurrently --kill-others \"nodemon app.js --pm\" \"node build/dev-server.js\"",
+    "dev:home": "concurrently --kill-others \"nodemon app.js\" \"node build/dev-server.js\"",
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src"
   },

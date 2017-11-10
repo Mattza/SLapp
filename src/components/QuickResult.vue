@@ -13,7 +13,6 @@ export default {
       return this.list
         .filter(listItem => {
           let trimedName = this.trimName(listItem.Name);
-          console.log(nameArr)
           if (!nameArr.includes(trimedName)) {
             nameArr.push(trimedName)
             return true;

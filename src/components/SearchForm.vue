@@ -12,23 +12,17 @@
       <p v-if="searching">Söker</p>
       <p v-if="error">{{error}}</p>
     </form>
-     <div class="offboarding" v-if="!firstTime">
-      <p>Inom kort kommer den även kunna hjälpa dig upptäcka störningar i trafiken</p>
-    </div>
-    <!-- <deviations></deviations> -->
   </div>
 </template>
 
 <script>
 import searchStore from './../SearchStore';
 import searchInput from './SearchInput';
-import deviations from './Deviations'
 
 export default {
   name: 'searchForm',
   components: {
-    'search-input': searchInput,
-    deviations
+    'search-input': searchInput
   },
   data() {
     return {
@@ -52,12 +46,13 @@ export default {
       if (this.model.from.Name && this.model.to.Name) {
         this.searching = true;
         searchStore.fetch(this.model.from, this.model.to)
-          .then(() => {
+          .then(res => {
             this.searching = false;
-            this.$routz.replace('/search-result');
+            this.$routz.push('/resultat');
           },
           error => {
             this.error = error;
+            this.searching = false;
           })
       }
     },

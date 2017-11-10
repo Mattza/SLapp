@@ -1,6 +1,6 @@
 <template>
   <ul class="result">
-    <li v-for="res in result" v-on:click="res.detailed=!res.detailed" class="result-item">
+    <li v-for="res in result" @click="res.detailed=!res.detailed" class="result-item">
       <div class="preview">
         <div class="preview-head">
           <h3>
@@ -12,7 +12,7 @@
           </h5>
   
           <button class="expander" v-if="!res.detailed">+</button>
-          <button class="expander expanderus" v-if="res.detailed">
+          <button class="expander" v-if="res.detailed">
             <span>-</span>
           </button>
   
@@ -45,13 +45,17 @@
             </div>
             <table class="body-leg__extras">
               <tr>
-                <td><small>Mot:</small></td>
+                <td>
+                  <small>Mot:</small>
+                </td>
                 <td>
                   <h5>{{part.dir}}</h5>
                 </td>
               </tr>
               <tr v-if="part !== res.LegList.Leg[res.LegList.Leg.length-1]">
-                <td><small>Byt vid:</small></td>
+                <td>
+                  <small>Byt vid:</small>
+                </td>
                 <td>
                   <h5>{{part.Destination.name}}</h5>
                 </td>
@@ -60,6 +64,9 @@
           </div>
         </template>
       </div>
+    </li>
+    <li class="result-item">
+      <button class="btn btn-primary" @click="fetchLater()">Senare</button>
     </li>
   </ul>
 </template>
@@ -74,6 +81,11 @@ export default {
       getRealLegs: res => res.LegList.Leg.filter(leg => leg.type !== 'WALK')
     }
   },
+  methods: {
+    fetchLater: async function () {
+      this.result = await SearchStore.fetchLater();
+    }
+  },
   filters: {
     origin: res => res.LegList.Leg[0].Origin.name,
     destination: res => res.LegList.Leg[res.LegList.Leg.length - 1].Destination.name,
@@ -82,7 +94,7 @@ export default {
   },
   created() {
     if (this.result.length === 0) {
-      this.$routz.push('search')
+      this.$routz.push('/')
     }
   }
 }
@@ -114,6 +126,7 @@ h5 {
   &-item {
     margin: 0.5rem;
     padding: 0.5rem;
+    border-radius: 0.25em;
     background-color: #fff;
   }
 }
@@ -183,9 +196,6 @@ h5 {
     display: flex;
     align-items: center;
     position: relative;
-
-
-    &>* {}
 
     &__first-col {
       width: $first-col;

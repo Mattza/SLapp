@@ -1,6 +1,6 @@
 <template>
   <div class="field-wrapper">
-    <input type="text" v-model="model.Name" :placeholder="placeholder" @input="changed()" @keydown.esc="reset()" @blur="reset()" @keydown.down="setActive(1)" @keydown.enter.prevent="selectTypeahead()" @keydown.up="setActive(-1)"></input>
+    <input type="text" v-model="model.Name" :placeholder="placeholder" @input="changed()" @focus="focus" @keydown.esc="reset()" @blur="reset()" @keydown.down="setActive(1)" @keydown.enter.prevent="selectTypeahead()" @keydown.up="setActive(-1)"></input>
     <ul v-show="typeaheadList.length || searching" class="typeahead-result">
       <li v-if="searching">Söker</li>
       <li v-for="item in typeaheadList" class="typeahead-result-item" @mousedown="selectTypeahead(item)" @mouseover="setActive(0,item)" :class="{'typeahead-result-item--active': item === active}">
@@ -66,6 +66,9 @@ export default {
         let index = this.typeaheadList.indexOf(this.active);
         this.active = this.typeaheadList[index + direction];
       }
+    },
+    focus(e) {
+      e.target.scrollIntoView()
     }
   }
 }
