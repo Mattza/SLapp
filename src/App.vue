@@ -1,5 +1,5 @@
 <template>
-  <div id="app" v-bind:class=" $route.path ==='/'?'ad':''">
+  <div id="app" :class="{ad:isAd}">
     <header>
       <img src="static/hamburger.svg" @click="openLeft()" />
       <h1 class="main-header-heading">
@@ -16,7 +16,7 @@
         <header>
           <h1>Meny</h1>
         </header>
-        <div v-for="link in links" @click="closeLeft()">
+        <div v-for="link in links" @click="closeLeft()" :key="link.link">
           <router-link class="left__link" :to="link.link">{{link.text}}</router-link>
         </div>
       </div>
@@ -29,11 +29,12 @@ export default {
   name: 'app',
   data() {
     return {
+      isAd: this.$route.path === '/',
       leftOpen: false,
-      openLeft: function () {
+      openLeft: function() {
         this.leftOpen = true;
       },
-      closeLeft: function () {
+      closeLeft: function() {
         console.log('')
         this.leftOpen = false;
       },
@@ -52,6 +53,7 @@ export default {
 body {
   margin: 0;
 }
+
 
 h1 {
   margin: 0;
@@ -75,6 +77,12 @@ a {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  
+  &.ad {
+    height: calc(100% - 50vh);
+    flex-shrink: 0;
+    flex-grow: 1;
+  }
 }
 
 header {
