@@ -1,8 +1,8 @@
 'use strict'
 const express = require('express');
-const fetch = require('./fetch');
+
 const app = express();
-let obj2queryStr = require('querystring').stringify;
+
 
 let sendErr = res => err => {
     console.err('Nått gick snett:', err);
