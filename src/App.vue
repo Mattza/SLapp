@@ -78,11 +78,11 @@ a {
   flex-direction: column;
   height: 100vh;
   
-  &.ad {
-    height: calc(100% - 50vh);
-    flex-shrink: 0;
-    flex-grow: 1;
-  }
+  // &.ad {
+  //   height: calc(100% - 50vh);
+  //   flex-shrink: 0;
+  //   flex-grow: 1;
+  // } 
 }
 
 header {
